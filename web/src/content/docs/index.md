@@ -13,9 +13,6 @@ hero:
     - text: Ver Ejemplos
       link: /ejemplos/
       icon: open-book
-    - text: GitHub
-      link: https://github.com/opencode-ai/opencode
-      icon: external
 ---
 
 ## ¿Qué es OpenCode?

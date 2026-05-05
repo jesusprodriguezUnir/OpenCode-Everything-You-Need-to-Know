@@ -5,9 +5,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Aprende OpenCode',
-      social: [
-        { icon: 'github', label: 'Repositorio', href: 'https://github.com/opencode-ai/opencode' },
-      ],
+      social: [],
       sidebar: [
         {
           label: 'Inicio',
