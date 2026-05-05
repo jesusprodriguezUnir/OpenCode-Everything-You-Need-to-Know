@@ -1,0 +1,23 @@
+:root {
+  --sl-color-accent-low: #1a2f4a;
+  --sl-color-accent: #3b82f6;
+  --sl-color-accent-high: #93c5fd;
+  --sl-color-white: #f8fafc;
+  --sl-color-gray-1: #e2e8f0;
+  --sl-color-gray-2: #cbd5e1;
+  --sl-color-gray-3: #94a3b8;
+  --sl-color-gray-4: #64748b;
+  --sl-color-gray-5: #475569;
+  --sl-color-gray-6: #334155;
+  --sl-color-black: #0f172a;
+}
+
+.hero html {
+  background: linear-gradient(135deg, #1a2f4a 0%, #0f172a 100%);
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #dbeafe;
+  --sl-color-accent: #3b82f6;
+  --sl-color-accent-high: #1e40af;
+}
