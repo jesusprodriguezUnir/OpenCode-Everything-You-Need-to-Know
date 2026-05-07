@@ -31,7 +31,11 @@ export default defineConfig({
           autogenerate: { directory: 'recursos' },
         },
       ],
-      customCss: ['./src/styles/custom.css'],
+      customCss: [
+        '@fontsource-variable/dm-sans',
+        '@fontsource/jetbrains-mono',
+        './src/styles/custom.css',
+      ],
     }),
   ],
 });
