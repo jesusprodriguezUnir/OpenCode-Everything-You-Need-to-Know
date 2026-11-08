@@ -1,132 +1,63 @@
 ---
-title: Sistema de Skills
-description: Aprende a automatizar tus flujos de trabajo con Skills
+title: Skills
+description: Instrucciones reutilizables en formato SKILL.md para OpenCode V2
 ---
 
-# Sistema de Skills
+Una skill es una carpeta con un fichero `SKILL.md`. Contiene instrucciones que el agente carga cuando las necesita, sin ocupar contexto en todas las sesiones.
 
-## 🎯 ¿Qué son las Skills de OpenCode?
-Las **Skills** son definiciones de comportamiento reutilizables que transforman flujos de trabajo complejos en comandos simples y repetibles. Piensa en ellas como "macros para IA" que encapsulan procesos de varios pasos en una sola invocación.
+## Dónde se buscan
 
-### Características Clave:
-1. **Reutilizables**: Define una vez, úsalas en cualquier lugar.
-2. **Compartibles**: Súbelas a tu control de versiones y compártelas con tu equipo.
-3. **Personalizables**: Modifícalas para proyectos o flujos específicos.
-4. **Seguras**: Ejecución controlada mediante permisos.
-5. **Descubribles**: Se listan automáticamente en la interfaz de OpenCode.
+**Proyecto**
 
----
+- `.opencode/skills/`
+- `.claude/skills/`
+- `.agents/skills/`
 
-## 📁 Estructura de un Archivo de Skill
+**Global**
 
-### Plantilla Básica (SKILL.md):
+- `~/.config/opencode/skills/`
+- `~/.claude/skills/`
+- `~/.agents/skills/`
+
+Cada skill vive en su propio directorio:
+
+```text
+.opencode/skills/revision-seguridad/
+└── SKILL.md
+```
+
+## Formato
+
 ```markdown
 ---
-name: "Nombre de la Skill"
-description: "Breve descripción de lo que hace"
-version: "1.0.0"
-tools: ["read", "ask", "write", "edit", "bash"]
+name: revision-seguridad
+description: Revisa cambios buscando problemas de seguridad. Úsala al revisar código que maneje autenticación, datos de usuario o entrada externa.
 ---
 
-# Nombre de la Skill
+# Revisión de seguridad
 
-Descripción detallada del propósito y comportamiento de la skill.
-
-## Comportamiento
-- Paso 1: Qué debe hacer OpenCode primero.
-- Paso 2: Siguiente acción a tomar.
-- Paso 3: Pasos finales y limpieza.
-
-## Guías
-- Mejores prácticas a seguir.
-- Restricciones o requisitos.
-
-## Ejemplos
-```bash
-/nombre-skill argumento1 argumento2
-```
+1. Busca credenciales o secretos escritos en el código.
+2. Comprueba que las entradas externas se validan antes de usarse.
+3. Revisa las consultas a base de datos por concatenación de cadenas.
+4. Resume los hallazgos por severidad.
 ```
 
----
+Campos del frontmatter: `name`, `description` (obligatoria para que la skill sea visible), `license`, `compatibility`, `metadata` y `disable-model-invocation`.
 
-## 🚀 Creando tu Primera Skill
+## Uso
 
-### Paso 1: Crear el Directorio de Skills
-```bash
-# Skills globales (disponibles en todos los proyectos)
-mkdir -p ~/.config/opencode/skills
+- **El modelo** la carga con la herramienta `skill` cuando la descripción encaja con la tarea.
+- **Tú** la referencias por su identificador con `@revision-seguridad`.
 
-# Skills específicas del proyecto (recomendado para equipos)
-mkdir -p .opencode/skills
-```
+Si `disable-model-invocation` está activo, solo podrás invocarla tú.
 
-### Paso 2: Crear el Archivo de Skill
-```bash
-# Ejemplo: Skill de revisión de código
-cat > .opencode/skills/revisar.md << 'EOF'
----
-name: "Revisar Código"
-description: "Revisión exhaustiva de seguridad, rendimiento y estilo"
-tools: ["read", "ask"]
----
+## Configuración
 
-# Revisar Código
+Para cargar rutas adicionales, usa la clave `skills` de `opencode.json`. Consulta [Configuración](/guias/configuracion/).
 
-Realiza una revisión profunda centrada en seguridad y mantenibilidad.
+## Buenas prácticas
 
-## Comportamiento
-1. Analiza el archivo o directorio especificado.
-2. Busca vulnerabilidades de seguridad.
-3. Revisa implicaciones de rendimiento.
-4. Sugiere mejoras específicas con ejemplos.
-
-## Ejemplos
-/revisar @src/auth/index.ts
-/revisar changed
-EOF
-```
-
----
-
-## 📋 Categorías de Skills Disponibles
-
-### 🔹 Flujo de Desarrollo
-- **`/pr`**: Crea una rama de funcionalidad, divide los cambios en commits lógicos y genera la Pull Request.
-- **`/tdd`**: Guía el ciclo Red-Green-Refactor escribiendo tests primero.
-- **`/refactor`**: Analiza y aplica mejoras de estructura al código de forma segura.
-
-### 🔹 Aseguramiento de Calidad
-- **`/test`**: Genera suites de pruebas completas cubriendo casos borde.
-- **`/audit`**: Escanea vulnerabilidades en el código y dependencias.
-
-### 🔹 Gestión de Proyectos
-- **`/todo`**: Gestiona tareas en un archivo `todos.md` con prioridades.
-- **`/docs`**: Genera documentación de API, guías de usuario y actualiza READMEs.
-
----
-
-## 📋 Gestión de Skills
-
-| Comando | Descripción |
-|---------|-------------|
-| `/skills list` | Ver todas las skills disponibles |
-| `/skills show [nombre]` | Ver detalles de una skill específica |
-| `/skills install [url/ruta]` | Instalar una nueva skill |
-| `/skills update` | Actualizar las skills instaladas |
-| `/skills reload` | Recargar las skills desde el disco |
-
----
-
-## 🎯 Mejores Prácticas de Seguridad
-
-1. **Gestión de Permisos**: Usa los permisos mínimos necesarios. No des acceso a `bash` si la skill solo necesita leer archivos.
-2. **Validación de Entrada**: Valida los argumentos y sanea las rutas de archivos.
-3. **Revisión de Terceros**: Revisa siempre el contenido de una skill antes de instalarla desde una fuente externa.
-
----
-
-## 📚 Siguientes Pasos
-
-- [Referencia de Comandos](/avanzado/comandos/) - Lista completa de comandos.
-- [Guía de Workflows](/avanzado/workflows/) - Diseña flujos de desarrollo.
-- [Guía de MCP](/avanzado/mcp/) - Extiende OpenCode con servidores.
+- Escribe la `description` como un disparador: di cuándo debe usarse la skill.
+- Mantén cada skill centrada en una tarea. Dos skills pequeñas se activan mejor que una grande.
+- Versiona las skills de proyecto en Git, salvo que contengan datos sensibles.
+- No guardes secretos ni claves de API en `SKILL.md`.

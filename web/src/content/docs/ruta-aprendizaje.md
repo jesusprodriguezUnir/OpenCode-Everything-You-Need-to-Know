@@ -1,135 +1,74 @@
 ---
-title: Ruta de Aprendizaje
-description: Un plan estructurado de 4 semanas para dominar OpenCode
+title: Ruta de aprendizaje
+description: Un plan de cuatro semanas para dominar OpenCode V2
 ---
 
-# Ruta de Aprendizaje de OpenCode
+# Ruta de aprendizaje de OpenCode
 
-Esta ruta de aprendizaje está diseñada para llevarte de cero a competentes en OpenCode en 4 semanas.
+Cada semana tiene objetivos, tareas y una comprobación final. Avanza al ritmo que necesites.
 
 ## Semana 1: Fundamentos
 
-### Objetivos
-- Instalar y configurar OpenCode
-- Conocer la interfaz de terminal (TUI)
-- Experimentar con modelos gratuitos
+**Objetivos**
 
-### Tareas
+- Instalar OpenCode V2 y abrir la TUI en un proyecto.
+- Conectar un proveedor.
 
-| Día | Tema | Recurso |
-|-----|------|---------|
-| 1 | Instalación de OpenCode | [Guía de Inicio Rápido](/guias/inicio-rapido/) |
-| 2 | Configuración de Zen | [Guía de Zen](/guias/zen/) |
-| 3 | Navegación básica de TUI | [Guía de TUI](/guias/tui/) |
-| 4 | Primeros comandos | Práctica libre |
-| 5 | Referencia de archivos con @ | [TUI Mastery](/guias/tui/) |
-| 6 | Comandos de shell con ! | Práctica libre |
-| 7 | **Revisión y práctica** | Repasar conceptos |
+**Tareas**
 
-### checkpoints de la Semana 1
-- [ ] OpenCode instalado y funcionando
-- [ ] API key de Zen configurada
-- [ ] Puedes navegar la TUI con confianza
-- [ ] Has probado al menos 3 comandos diferentes
+- [ ] Completar la [guía de inicio rápido](/guias/inicio-rapido/).
+- [ ] Ejecutar `/init` en un proyecto y revisar el `AGENTS.md` generado.
+- [ ] Practicar referencias con `@` y la tecla líder `ctrl+x` (ver [TUI](/guias/tui/)).
 
----
+**Comprobación**: puedes hacer una pregunta sobre un fichero concreto y obtener una respuesta útil.
 
-## Semana 2: Flujo de Trabajo Core
+## Semana 2: Flujo de trabajo
 
-### Objetivos
-- Dominar el ciclo Plan → Build
-- Crear tu primer agente personalizado
-- Integrar shell commands en flujos de trabajo
+**Objetivos**
 
-### Tareas
+- Entender la diferencia entre los agentes `plan` y `build`.
+- Configurar permisos básicos.
 
-| Día | Tema | Recurso |
-|-----|------|---------|
-| 8 | Modos Plan y Build | [Guía de TUI](/guias/tui/) |
-| 9 | Atajos de teclado avanzados | [TUI Mastery](/guias/tui/) |
-| 10 | Introducción a Agentes | [Guía de Agentes](/guias/agentes/) |
-| 11 | Crear un agente personalizado | [Agentes Guide](/guias/agentes/) |
-| 12 | Integración con git | workflow básico |
-| 13 | Flujos de trabajo combinados | [Workflows](/avanzado/workflows/) |
-| 7 | **Revisión y práctica** | Proyecto pequeño |
+**Tareas**
 
-### Checkpoints de la Semana 2
-- [ ] Puedes切换 entre Plan y Build sin pensar
-- [ ] Has creado al menos un agente personalizado
-- [ ] Usas comandos de shell regularmente en tus flujos
+- [ ] Leer [Agentes](/guias/agentes/) y usar `plan` para una tarea de análisis.
+- [ ] Crear un `opencode.json` de proyecto con reglas de permisos (ver [Configuración](/guias/configuracion/)).
+- [ ] Revisar un cambio con `/undo` y `/redo` en un repositorio Git.
 
----
+**Comprobación**: sabes qué agente usar para explorar y cuál para editar, y por qué.
 
-## Semana 3: Características Avanzadas
+## Semana 3: Extensión
 
-### Objetivos
-- Dominar los Skills de OpenCode
-- Configurar espacios de trabajo en equipo
-- Implementar integraciones básicas
+**Objetivos**
 
-### Tareas
+- Reutilizar instrucciones con skills y comandos.
+- Conectar un servidor MCP.
 
-| Día | Tema | Recurso |
-|-----|------|---------|
-| 15 | Introducción a Skills | [Guía de Skills](/guias/skills/) |
-| 16 | Crear tu primer skill | [Skills Guide](/guias/skills/) |
-| 17 | Skills para code review | [Skill Examples](/guias/skills/) |
-| 18 | Espacios de trabajo en equipo | Configuración de Zen |
-| 19 | Variables de entorno y seguridad | [Best Practices](/guias/) |
-| 20 | Integración CI/CD básica | [Workflows](/avanzado/workflows/) |
-| 21 | **Proyecto integrador** | Aplicar todo lo aprendido |
+**Tareas**
 
-### Checkpoints de la Semana 3
-- [ ] Has creado al menos 2 skills personalizados
-- [ ] Entiendes cómo estructurar skills reutilizables
-- [ ] Has configurado un espacio de trabajo básico
+- [ ] Crear una skill de proyecto (ver [Skills](/guias/skills/)).
+- [ ] Crear un comando personalizado (ver [Comandos](/avanzado/comandos/)).
+- [ ] Añadir un servidor MCP con `opencode mcp add` (ver [MCP](/avanzado/mcp/)).
 
----
+**Comprobación**: la skill se activa cuando la pides y el servidor MCP aparece en `opencode mcp list`.
 
-## Semana 4: Dominio
+## Semana 4: Flujo con especificaciones y migración
 
-### Objetivos
-- Construir integraciones avanzadas con MCP
-- Optimizar costos y rendimiento
-- Prepararte para enseñar a otros
+**Objetivos**
 
-### Tareas
+- Planificar un cambio con especificaciones antes de implementarlo.
+- Dejar el entorno de equipo listo.
 
-| Día | Tema | Recurso |
-|-----|------|---------|
-| 22 | Introducción a MCP | [Guía de MCP](/avanzado/mcp/) |
-| 23 | Crear un servidor MCP básico | [MCP Guide](/avanzado/mcp/) |
-| 24 | Optimización de modelos | [Zen Guide](/guias/zen/) |
-| 25 | Gestión de costos | Calculadora de Zen |
-| 26 | Patrones avanzados de workflows | [Workflows](/avanzado/workflows/) |
-| 27 | Troubleshooting avanzado | [FAQ](/avanzado/faq/) |
-| 28 | **Proyecto final** | Portfolio de configuración |
+**Tareas**
 
-### Checkpoints de la Semana 4
-- [ ] Has creado al menos un servidor MCP
-- [ ] Entiendes cómo optimizar costos
-- [ ] Tienes una configuración lista para producción
+- [ ] Seguir [OpenCode + OpenSpec](/openspec/) en un cambio pequeño.
+- [ ] Revisar [Workflows](/avanzado/workflows/).
+- [ ] Si vienes de la versión 1, completar [Migrar de V1 a V2](/avanzado/migracion/).
 
----
+**Comprobación**: un cambio pasa de propuesta a archivado sin pasos manuales ocultos.
 
-## Recursos Adicionales
+## Recursos
 
-### Documentación
-- [Referencia de Comandos](/avanzado/comandos/)
-- [Guía de Migración](/avanzado/migracion/) (si vienes de otra herramienta)
-- [FAQ y Troubleshooting](/avanzado/faq/)
-
-### Comunidad
-- [Website Oficial](https://opencode.ai)
-- [Documentación](https://docs.opencode.ai)
-- [Discord](https://discord.gg/opencode)
-
-### Próximos Pasos Después de las 4 Semanas
-1. Explorar el ecosistema de plugins
-2. Contribuir a la comunidad
-3. Crear templates de configuración para tu equipo
-4. Mantenerse actualizado con nuevas versiones
-
----
-
-> **💡 Nota**: Esta ruta es una guía, no una regla. Avanza a tu propio ritmo y profundiza en los temas que más te interesen.
+- [Referencia de comandos](/avanzado/comandos/)
+- [Preguntas frecuentes](/avanzado/faq/)
+- [Documentación oficial](https://opencode.ai/docs)

@@ -146,3 +146,6 @@ Images/thumbnails/
 # .workspace/
 # personal-notes.md
 # todo.md
+# ==================== REFERENCE MATERIAL ====================
+# Copyrighted reference books (never commit)
+docs/*.epub

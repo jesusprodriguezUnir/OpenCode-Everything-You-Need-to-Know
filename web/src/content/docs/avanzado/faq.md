@@ -1,87 +1,99 @@
 ---
-title: FAQ y Solución de Problemas
-description: Respuestas a preguntas comunes y soluciones a problemas técnicos
+title: FAQ y solución de problemas
+description: Respuestas a preguntas frecuentes y diagnóstico de problemas en OpenCode V2
 ---
 
-# FAQ y Solución de Problemas
+## Instalación
 
-## ❓ Preguntas Generales
+### ¿Por qué no encuentro `opencode` tras instalar?
 
-### ¿Es OpenCode realmente gratuito y de código abierto?
-**Sí.** OpenCode es 100% código abierto bajo la licencia MIT. Puedes ver el código, auto-alojarlo o modificarlo. Los únicos costes asociados son los del uso de los modelos de IA (a través de Zen o proveedores directos).
+Comprueba dónde está el binario y que su directorio está en el `PATH`:
 
-### ¿Cómo se compara OpenCode con Claude Code o Cursor?
-OpenCode ofrece varias ventajas clave:
-- **Flexibilidad de modelos**: Soporta más de 75 proveedores.
-- **Precio**: Pago por uso, sin suscripciones mensuales obligatorias.
-- **Privacidad**: Opción de usar modelos locales (Ollama) y auto-alojamiento.
-
----
-
-## 🛠️ Instalación y Configuración
-
-### El comando `opencode` no se encuentra tras la instalación
-Intenta añadirlo a tu PATH:
 ```bash
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
+which opencode
+opencode debug paths bin
 ```
 
-### La clave de API de Zen no funciona
-1. **Regenera la clave** en el panel de control de opencode.ai.
-2. **Verifica el saldo**: Asegúrate de tener créditos activos.
-3. **Formato**: La clave debe empezar por `zen_`.
+Si instalaste V1 antes, puede haber dos binarios. Desinstala la versión que no uses.
 
----
+### ¿Puedo usar gestores de paquetes en Windows?
 
-## 🚀 Uso y Funcionalidades
+No en V2. Descarga el binario o el instalador de escritorio desde [opencode.ai](https://opencode.ai), o usa WSL.
 
-### Las referencias a archivos (@archivo) no funcionan
-- Verifica que estás en el directorio correcto con `!pwd`.
-- Usa rutas absolutas si es necesario.
-- La búsqueda difusa funciona mejor con nombres de archivo únicos.
+### ¿Puedo usar mi configuración de V1?
 
-### OpenCode está haciendo cambios incorrectos
-1. Usa `/undo` para deshacer el último cambio.
-2. Revisa `!git status` para ver qué archivos han cambiado.
-3. Sé más específico en tus instrucciones (menciona líneas o funciones específicas).
+No directamente. Las claves cambiaron y `mcp.servers` no existe en V1. Sigue la guía [Migrar de V1 a V2](/avanzado/migracion/).
 
----
+## Configuración
 
-## 🤖 Agentes y Skills
+### ¿Qué configuración se está cargando?
 
-### Mi agente personalizado no aparece en la lista
-- Verifica que el archivo esté en `.opencode/agents/` o `~/.config/opencode/agents/`.
-- Asegúrate de que el archivo termine en `.md` o `.json`.
-- Ejecuta `/agents reload`.
+```bash
+opencode debug config
+```
 
-### La ejecución de una Skill falla
-- Valida la sintaxis con `/skills validate [nombre]`.
-- Revisa los logs en `!cat ~/.local/share/opencode/skills.log`.
+Muestra las fuentes en el orden en que se aplican.
 
----
+### Aparece un aviso de clave obsoleta
 
-## 🔒 Seguridad y Privacidad
+Sustituye `permission`, `agent`, `command` o `provider` por `permissions`, `agents`, `commands` o `providers`. Consulta [Configuración](/guias/configuracion/).
 
-### ¿Se envía mi código a los proveedores de IA?
-Sí, cuando usas modelos basados en la nube. Para máxima privacidad:
-1. Usa **modelos locales** (Ollama, llama.cpp).
-2. Usa proveedores con garantías empresariales de privacidad.
-3. Configura un archivo `.opencodeignore` para excluir archivos sensibles (como `.env`).
+## Proveedores
 
----
+### La clave de API no funciona
 
-## 🤝 Comunidad y Soporte
+Vuelve a ejecutar `/connect` y pega la clave completa. Comprueba el saldo en [OpenCode Console](https://opencode.ai/console) si usas esa cuenta.
 
-### ¿Dónde puedo obtener ayuda?
-1. **Discord**: [Comunidad oficial](https://opencode.ai/discord).
-2. **GitHub**: Reporta problemas en el repositorio.
-3. **Documentación**: Consulta [docs.opencode.ai](https://docs.opencode.ai).
+```bash
+opencode auth list
+```
 
----
+## Uso
 
-## 📚 Recursos Adicionales
+### Las referencias `@archivo` no encuentran el fichero
 
-- [Referencia de Comandos](/avanzado/comandos/)
-- [Guía de Inicio Rápido](/guias/inicio-rapido/)
-- [Guía de Agentes](/guias/agentes/)
+Comprueba el directorio desde el que arrancaste OpenCode. Usa una parte del nombre o una ruta relativa al proyecto.
+
+### OpenCode pide permiso para todo
+
+Revisa la lista `permissions` de tu configuración. Recuerda que, si ninguna regla coincide, se pregunta. Gana siempre la última regla que coincide.
+
+### `/undo` no funciona
+
+El proyecto debe ser un repositorio Git.
+
+## Agentes y comandos
+
+### Mi agente no aparece
+
+```bash
+opencode debug agents
+```
+
+Revisa el nombre del fichero, su ruta (`.opencode/agents/` o `~/.config/opencode/agents/`) y el frontmatter.
+
+### Mi comando `/nombre` no aparece
+
+Comprueba que el fichero es `.md` y está en `.opencode/commands/` o `~/.config/opencode/commands/`.
+
+## MCP
+
+### El servidor MCP no arranca
+
+```bash
+opencode mcp list
+```
+
+Ejecuta el `command` del servidor directamente en la terminal para ver el error real.
+
+## Actualizaciones
+
+```bash
+opencode upgrade
+```
+
+Desde la TUI puedes usar `/update`.
+
+## Ayuda
+
+Para una referencia completa, consulta la [documentación oficial](https://opencode.ai/docs). Si el problema persiste, incluye en tu consulta la versión de OpenCode (`opencode --version`) y la salida de `opencode debug config` con las claves sensibles eliminadas.

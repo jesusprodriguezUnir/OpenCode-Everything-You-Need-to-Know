@@ -1,257 +1,111 @@
 ---
-title: Inicio Rápido
-description: Instala OpenCode y ponte en marcha en menos de 5 minutos
+title: Inicio rápido
+description: Instala OpenCode V2, conecta un proveedor y ejecuta tu primera sesión
 ---
 
-# Inicio Rápido con OpenCode
+## Requisitos
 
-## 📋 Descripción General
+- Terminal con soporte para TUI (WezTerm, Alacritty, Windows Terminal o similar).
+- Una cuenta de proveedor de modelos, o una cuenta en OpenCode Console (ver [Zen / Console](/guias/zen/)).
 
-Esta guía te ayudará a instalar OpenCode y empezar en menos de 5 minutos.
+## 1. Instalar
 
-## 🚀 Métodos de Instalación
+Elige el método según tu sistema operativo.
 
-### Método 1: Script de Instalación (Recomendado)
+**macOS y Linux: script oficial**
 
 ```bash
-curl -fsSL https://opencode.ai/install | bash
+curl -fsSL https://opencode.ai/v2/install | bash
 ```
 
-### Método 2: Gestores de Paquetes
+**macOS y Linux: Homebrew**
 
-**Homebrew (macOS/Linux):**
 ```bash
-brew install anomalyco/tap/opencode
+brew install anomalyco/tap/opencode-v2
 ```
 
-**npm:**
+**Con un gestor de paquetes de Node.js**
+
 ```bash
-npm install -g opencode-ai
+npm install -g @opencode/cli
 ```
 
-**Bun:**
-```bash
-bun install -g opencode-ai
-```
+Equivalentes con otros gestores: `bun install -g --trust @opencode/cli`, `pnpm add -g --allow-build=@opencode/cli @opencode/cli`, `yarn global add @opencode/cli`.
 
-**pnpm:**
-```bash
-pnpm install -g opencode-ai
-```
+**Arch Linux (AUR)**: `paru -S opencode-beta`
 
-**Yarn:**
-```bash
-yarn global add opencode-ai
-```
+**mise**: `mise use -g opencode`
 
-### Método 3: Gestores de Paquetes del Sistema
+### Windows
 
-**Arch Linux:**
-```bash
-sudo pacman -S opencode
-```
+Los gestores de paquetes **no son compatibles** en Windows nativo. Tienes dos opciones:
 
-**Arch Linux AUR (última versión):**
-```bash
-paru -S opencode-bin
-```
+- Descargar el binario independiente o el instalador de escritorio desde [opencode.ai](https://opencode.ai).
+- Usar WSL y seguir las instrucciones de Linux dentro de la distribución.
 
-**Chocolatey (Windows):**
-```bash
-choco install opencode
-```
-
-**Scoop (Windows):**
-```bash
-scoop install opencode
-```
-
-### Método 4: Descarga Binaria
-
-1. Visita: https://github.com/anomalyco/opencode/releases
-2. Descarga el binario apropiado para tu SO
-3. Extrae y añade a PATH
-
-## 🖥️ Instalación en Windows
-
-### Recomendado: Usar WSL2 (Windows Subsystem for Linux)
+## 2. Comprobar la instalación
 
 ```bash
-# Habilitar WSL2
-wsl --install
-
-# Instalar Ubuntu o distribución preferida
-wsl --install -d Ubuntu
-
-# Luego usar los métodos de instalación de Linux
-```
-
-### Opciones Nativas para Windows:
-
-```bash
-# Usando Chocolatey
-choco install opencode
-
-# Usando Scoop
-scoop install opencode
-
-# Usando npm
-npm install -g opencode-ai
-
-# Usando Docker
-docker run -it --rm ghcr.io/anomalyco/opencode
-```
-
-## ✅ Verificación
-
-Después de la instalación, verifica que OpenCode funcione:
-
-```bash
-# Verificar versión
 opencode --version
+```
 
-# Iniciar la TUI de OpenCode
+## 3. Conectar un proveedor
+
+Abre la TUI en tu proyecto y ejecuta:
+
+```bash
+cd /ruta/a/tu/proyecto
 opencode
-
-# O ejecutar una prueba rápida
-opencode run "Hola, ¿qué versión de OpenCode estoy ejecutando?"
 ```
 
-## 🔧 Configuración Post-Instalación
+Dentro de la TUI, escribe `/connect` y sigue el asistente para añadir un proveedor. Para OpenCode Console, elige el proveedor **OpenCode** y pega tu clave de API.
 
-### 1. Primera Configuración
+## 4. Preparar el proyecto
 
-```bash
-# Iniciar OpenCode
-opencode
+Dentro de la TUI:
 
-# Verás la pantalla de bienvenida
-# Presiona Enter para continuar
-```
-
-### 2. Configura Tu Primer Proveedor
-
-```bash
-# En la TUI, ejecuta:
-/connect
-
-# Sigue las instrucciones para añadir:
-# 1. OpenCode Zen (recomendado para principiantes)
-# 2. U otro proveedor (OpenAI, Anthropic, etc.)
-```
-
-### 3. Inicializa un Proyecto
-
-```bash
-# Navega a tu proyecto
-cd /path/to/your/project
-
-# Inicia OpenCode en el contexto del proyecto
-opencode .
-
-# Inicializa el análisis del proyecto
+```text
 /init
 ```
 
-## 🛠️ Solución de Problemas de Instalación
+Este comando genera un `AGENTS.md` con el contexto del proyecto. Revísalo y ajústalo a mano.
 
-### Problemas Comunes:
+## 5. Primera petición
 
-**1. "Command not found: opencode"**
-
-```bash
-# Verificar ruta de instalación
-which opencode
-
-# Añadir a PATH si es necesario
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
+```text
+¿Qué hace este proyecto? @README.md
 ```
 
-**2. Errores de Permisos**
+La referencia `@` busca ficheros del proyecto de forma aproximada.
+
+También puedes lanzar una petición sin abrir la TUI:
 
 ```bash
-# Corregir permisos para instalación global
-sudo chown -R $(whoami) /usr/local/lib/node_modules
+opencode run "Resume la estructura de este proyecto"
 ```
 
-**3. Problemas con Versión de Node.js**
+## Actualizar
 
 ```bash
-# Verificar versión de Node.js
-node --version
-
-# Actualizar si es necesario (usando nvm)
-nvm install 18
-nvm use 18
+opencode upgrade
 ```
 
-**4. Configuración de WSL en Windows**
+Dentro de la TUI puedes usar `/update`. La clave `update` de la configuración controla si OpenCode avisa o instala actualizaciones automáticamente (`disable`, `notify` o `auto`).
+
+## Desinstalar
+
+Revisa primero qué se eliminará:
 
 ```bash
-# Habilitar WSL2
-wsl --install
-
-# Instalar Ubuntu o distribución preferida
-wsl --install -d Ubuntu
-
-# Luego usar los métodos de instalación de Linux
+opencode uninstall --dry-run
+opencode uninstall
 ```
 
-## 🔄 Actualizar OpenCode
+La desinstalación conserva las sesiones, la configuración y el estado.
 
-### Métodos de Actualización:
+## Siguientes pasos
 
-```bash
-# Usando script de instalación (volver a ejecutar)
-curl -fsSL https://opencode.ai/install | bash
-
-# Usando npm
-npm update -g opencode-ai
-
-# Usando Homebrew
-brew update
-brew upgrade opencode
-
-# Verificar actualizaciones
-opencode --version
-# Comparar con la última: https://github.com/anomalyco/opencode/releases
-```
-
-## 🗑️ Desinstalación
-
-### Eliminar OpenCode:
-
-```bash
-# npm
-npm uninstall -g opencode-ai
-
-# Homebrew
-brew uninstall opencode
-
-# Eliminar archivos de configuración (opcional)
-rm -rf ~/.config/opencode
-rm -rf ~/.opencode
-```
-
-> **💡 Consejo**: Mantén tus archivos de configuración (`~/.config/opencode/`) si planeas reinstallar, ya que contienen las configuraciones de tus proveedores y personalizaciones.
-
-## 🎯 Próximos Pasos
-
-Después de una instalación exitosa:
-
-1. **Configura Zen** (recomendado para principiantes) o tu proveedor preferido
-2. **Inicializa un proyecto de prueba** para explorar características
-3. **Prueba comandos básicos** como `/help` y `/models`
-4. **Explora la TUI** con la tecla Tab para cambiar de agente
-
-¡Ahora estás listo para explorar las powerful funcionalidades de OpenCode!
-
----
-
-## 📚 ¿Qué Sigue?
-
-- [Conceptos Fundacionales](/#-conceptos-fundamentales) - Aprende Zen, TUI y Agentes
-- [Guía de Zen Model Router](/guias/zen/) - Profundiza en Zen
-- [Guía de TUI Mastery](/guias/tui/) - Domina la interfaz de terminal
-- [Guía de Agentes](/guias/agentes/) - Trabaja con agentes IA
+- [TUI](/guias/tui/): atajos y comandos de barra.
+- [Configuración](/guias/configuracion/): `opencode.json` y permisos.
+- [Agentes](/guias/agentes/): cómo usar `build` y `plan`.
+- Si vienes de la versión 1, lee [Migrar de V1 a V2](/avanzado/migracion/).

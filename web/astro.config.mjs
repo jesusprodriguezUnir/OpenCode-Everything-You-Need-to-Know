@@ -2,9 +2,18 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
+  site: 'https://open-code-everything-you-need-to-kn.vercel.app',
   integrations: [
     starlight({
       title: 'Aprende OpenCode',
+      logo: { src: './src/assets/logo.png' },
+      defaultLocale: 'root',
+      locales: {
+        root: { label: 'Español', lang: 'es-ES' },
+      },
+      components: {
+        Footer: './src/components/overrides/Footer.astro',
+      },
       social: [],
       sidebar: [
         {
@@ -20,15 +29,29 @@ export default defineConfig({
         },
         {
           label: 'Guías',
-          autogenerate: { directory: 'guias' },
+          items: [{ autogenerate: { directory: 'guias' } }],
         },
         {
           label: 'Avanzado',
-          autogenerate: { directory: 'avanzado' },
+          items: [{ autogenerate: { directory: 'avanzado' } }],
+        },
+        {
+          label: 'OpenCode + OpenSpec',
+          items: [
+            { autogenerate: { directory: 'openspec' } },
+            {
+              label: 'Guía completa de OpenSpec ↗',
+              link: 'https://openspec-ochre.vercel.app/',
+              attrs: { target: '_blank' },
+            },
+          ],
         },
         {
           label: 'Recursos',
-          autogenerate: { directory: 'recursos' },
+          items: [
+            { autogenerate: { directory: 'recursos' } },
+            { label: 'Manual en PDF', link: '/manual-opencode.pdf', attrs: { download: '' } },
+          ],
         },
       ],
       customCss: [

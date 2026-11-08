@@ -1,231 +1,53 @@
 ---
-title: Ejemplos Prácticos
-description: Casos de uso comunes de OpenCode con ejemplos paso a paso
+title: Ejemplos prácticos
+description: Peticiones de ejemplo para tareas habituales con OpenCode V2
 ---
 
-# Ejemplos Prácticos de OpenCode
+Estos ejemplos son peticiones que puedes escribir en la TUI. Adáptalas al lenguaje y a la estructura de tu proyecto. Las referencias con `@` apuntan a ficheros o carpetas del proyecto.
 
-Aquí encontrarás ejemplos reales de cómo usar OpenCode en tu día a día como desarrollador.
+## Entender un proyecto
 
----
-
-## 🐛 Depuración y Bugs
-
-### Encontrar y corregir un bug
-
-```bash
-# Inicia en tu proyecto
-opencode .
-
-# Describe el problema
-[Plan] Hay un error en la función de login que no puedo identificar
-
-# Analiza el código para entender el problema
-Revisa @src/auth/login.ts y dime qué podría estar causando timeouts
-
-# Implementa la corrección
-[Build] Corrige el timeout en la línea 45
+```text
+/init
+Describe la arquitectura de este proyecto: capas, módulos y puntos de entrada. @README.md
 ```
 
-### Debug con Stack Traces
+## Depurar un error
 
-```bash
-# Pega el stack trace directamente
-[Plan] Este error ocurre cuando subo archivos grandes:
-
-Error: RangeError: Maximum call stack exceeded
-    at compressImage (utils/image.js:234)
-    at processImage (utils/image.js:189)
-    at uploadHandler (handlers/upload.js:45)
-
-¿Cuál es la causa y cómo lo soluciono?
+```text
+Este error aparece al ejecutar los tests. Localiza la causa en @src/ y propón una corrección sin editar nada todavía:
+<pega aquí el mensaje de error>
 ```
 
----
+Con el agente `plan`, la petición se queda en análisis. Cuando la propuesta sea correcta, pide la implementación con `build`.
 
-## 🧪 Testing
+## Escribir tests
 
-### Escribir tests para una función
-
-```bash
-# Genera tests unitarios
-[Build] Crea tests unitarios para @utils/validation.js usando Vitest
-
-# El resultado incluirá:
-# - Tests para casos válidos
-# - Tests para casos edge
-# - Tests para casos de error
+```text
+Escribe tests unitarios para @src/utils/validation.ts cubriendo casos válidos, límites y errores.
 ```
 
-### Ejecutar y analizar resultados de tests
+## Revisar cambios
 
-```bash
-# Ejecuta tests y analiza
-!npm test
-
-# Ahora pregunta sobre los fallos
-[Plan] Hay 3 tests fallando. ¿Cuál es la causa raíz de cada uno?
+```text
+Revisa los cambios sin confirmar del repositorio buscando errores de lógica y de seguridad. Ordena los hallazgos por severidad.
 ```
 
----
+Para repetir esta revisión, crea un comando personalizado. Consulta [Comandos](/avanzado/comandos/).
 
-## 📝 Refactoring
+## Refactorizar con plan
 
-### Mejorar código existente
-
-```bash
-# Solicita análisis de mejoras
-[Plan] ¿Cómo puedo refactorizar @src/components/Table.jsx para ser más performante?
-
-# Revisa el plan y ejecuta
-[Build] Aplica las mejoras sugeridas, manteniendo la API existente
+```text
+Propón cómo reducir la complejidad de @src/checkout/ sin cambiar su comportamiento. Lista los pasos en orden.
 ```
 
-### Modernizar código legacy
+## Ejecutar sin abrir la TUI
 
 ```bash
-# Conversión a patrones modernos
-[Plan] Convierte este componente de class component a functional component con hooks:
-
-@src/components/UserProfile.jsx
-
-# Incluye:
-# - useState para estado
-# - useEffect para efectos
-# - PropTypes o TypeScript
+opencode run --agent plan "Lista los endpoints HTTP definidos en este proyecto"
 ```
 
----
+## Siguientes pasos
 
-## 🆕 Nuevas Funcionalidades
-
-### Crear una API REST completa
-
-```bash
-# Solicita la implementación
-[Build] Crea una API REST para gestión de usuarios con:
-
-- GET /api/users - Listar usuarios
-- POST /api/users - Crear usuario
-- GET /api/users/:id - Obtener usuario
-- PUT /api/users/:id - Actualizar usuario
-- DELETE /api/users/:id - Eliminar usuario
-
-Usa Express.js y sigue las rutas en @src/routes/
-```
-
-### Crear componente UI
-
-```bash
-# Componente con especificaciones
-[Build] Crea un componente Modal en @src/components/Modal.tsx que:
-- Acepta props: isOpen, title, children, onClose
-- Usa React Portal
-- Incluye animación de fade
-- Es accesible (WAI-ARIA)
-```
-
----
-
-## 🔍 Exploración de Código
-
-### Entender un codebase nuevo
-
-```bash
-# Análisis completo del proyecto
-[Explore] Analiza este proyecto y dime:
-- ¿Qué tecnología usa?
-- ¿Cuál es la estructura de carpetas?
-- ¿Dónde está la lógica de autenticación?
-- ¿Cómo se estructura la base de datos?
-```
-
-### Buscar código específico
-
-```bash
-# Encontrar dónde se usa algo
-[Explore] ¿Dónde se define y usa la función `parseToken` en este proyecto?
-
-# Encontrar patrones
-[Explore] Encuentra todos los archivos que usan `useEffect` y no tienen cleanup
-```
-
----
-
-## ⚙️ Configuración y Mantenimiento
-
-### Actualizar dependencias
-
-```bash
-# Revisar y actualizar paquetes
-[Plan] ¿Cuáles son las dependencias desactualizadas en package.json?
-Sugiere cómo actualizarlas sin romper nada
-```
-
-### Configurar CI/CD
-
-```bash
-# Crear pipeline
-[Build] Crea un workflow de GitHub Actions en .github/workflows/ci.yml que:
-- Ejecute tests en Node 18 y 20
-- Corra lint y typecheck
-- Suba coverage a Codecov
-- Use caching para npm
-```
-
----
-
-## 🧹 Limpieza y Organización
-
-### Eliminar código no usado
-
-```bash
-# Encontrar código muerto
-[Explore] Encuentra funciones que están definidas pero nunca usadas en @src/
-
-# Luego elimínalas
-[Build] Elimina las funciones no usadas que identificaste
-```
-
-### Organizar imports
-
-```bash
-# Reordenar y limpiar
-[Build] Organiza los imports en @src/App.tsx:
-- Imports de Node.js primero
-- Luego de terceros
-- Finalmente locales
-- Elimina los no usados
-```
-
----
-
-## 🚀 Tips Avanzados
-
-### Chaining de comandos
-
-```bash
-# Combina análisis + implementación
-!git diff --name-only | xargs -I {} echo "Analizando {}" && [Plan] ¿Qué cambios hay en estos archivos?
-
-# Usar resultado anterior
-El código que analizamos antes, ¿cómo lo haríamos más performante?
-```
-
-### Usar el modo correto
-
-| Modo | Cuándo usarlo |
-|------|----------------|
-| **Plan** | Analizar, planificar, entender, explorar |
-| **Build** | Escribir código, crear archivos, modificar |
-
-> **💡 Tip**: Cambia entre modos con `Tab`. Plan es más rápido y barato porque solo lee. Build hace cambios reales.
-
----
-
-## 📚 Más Recursos
-
-- [Guía de Inicio Rápido](/guias/inicio-rapido/)
-- [Guía de TUI](/guias/tui/)
-- [Guía de Zen](/guias/zen/)
-- [Referencia de Comandos](/avanzado/comandos/)
+- [Flujos de trabajo](/avanzado/workflows/) para organizar tareas más grandes.
+- [OpenCode + OpenSpec](/openspec/) para cambios que necesitan especificaciones.

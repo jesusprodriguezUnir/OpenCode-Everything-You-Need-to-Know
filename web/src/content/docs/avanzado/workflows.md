@@ -1,102 +1,62 @@
 ---
-title: Diseño de Workflows
-description: Aprende a diseñar flujos de trabajo eficientes asistidos por IA
+title: Flujos de trabajo
+description: Un flujo recomendado para planificar, implementar y revisar cambios con OpenCode
 ---
 
-# Diseño de Workflows
+Un flujo sencillo reduce los errores de las herramientas de programación con IA: primero se entiende el código, después se planifica y, por último, se implementa.
 
-## 🎯 Resumen
-Esta guía cubre flujos de trabajo probados para el desarrollo asistido por IA con OpenCode. Elige el flujo que mejor se adapte a tu tarea actual.
+## Flujo recomendado
 
----
-
-## 🔄 1. Explore → Plan → Code → Commit
-
-El flujo más versátil para problemas complejos:
-
-1.  **Explore**: Lee archivos relevantes, imágenes o URLs. Usa subagentes para verificar. **No** programes todavía; primero entiende.
-2.  **Plan**: Pide a OpenCode que cree un plan. Revisa y refina el enfoque. Considera alternativas y pros/contras.
-3.  **Code**: Implementa la solución. Verifica que sea razonable mientras avanzas. Usa tests para validar.
-4.  **Commit**: Guarda los resultados con mensajes claros. Crea Pull Requests si es necesario.
-
-### Ejemplo:
-```bash
-# Explore: Entiende el código
-@explore Analiza @src/auth/ para ver la implementación de autenticación
-
-# Plan: Diseña la solución
-[Plan] ¿Cómo añadirías soporte para OAuth2 a la autenticación actual?
-
-# Code: Implementa
-[Build] Implementa el soporte para OAuth2 según lo planeado
+```text
+Explorar (plan)  →  Planificar (plan)  →  Implementar (build)  →  Revisar  →  Confirmar
 ```
 
----
+### 1. Explorar con `plan`
 
-## 🧪 2. Desarrollo Dirigido por Tests (TDD)
+El agente `plan` lee el código sin editarlo.
 
-Ideal para cambios verificables con pruebas unitarias o de integración:
-
-1.  **Escribe Tests**: Crea pruebas basadas en el comportamiento esperado. Asegúrate de que fallen inicialmente (**Red**).
-2.  **Implementa**: Escribe el código mínimo necesario para que los tests pasen (**Green**).
-3.  **Refactoriza**: Mejora el código manteniendo los tests en verde.
-
-### Ejemplo:
-```bash
-# Inicia sesión de TDD
-/tdd "Validación de registro de usuario"
-
-# OpenCode te guiará por:
-# 1. Escribir test fallido
-# 2. Implementar solución mínima
-# 3. Refactorizar
+```text
+Explica cómo se gestiona la sesión de usuario en @src/auth/ y qué módulos dependen de ella.
 ```
 
----
+### 2. Planificar
 
-## 🤖 El Método BMAD (Brainstorm, Model, Act, Deliver)
+Pide un plan concreto y revisa las preguntas que haga el agente:
 
-BMAD es un marco sistemático para el desarrollo asistido por IA.
+```text
+Propón un plan para añadir expiración a las sesiones. Lista los ficheros que cambiarían y los riesgos.
+```
 
-### Fase 1: Brainstorm (Lluvia de ideas)
-**Propósito:** Explorar el espacio del problema sin restricciones.
-- Investiga soluciones existentes.
-- Genera múltiples enfoques.
-- Considera casos borde y restricciones.
+Si el cambio es grande, usa [OpenCode + OpenSpec](/openspec/) para dejar el plan por escrito antes de tocar código.
 
-### Fase 2: Model (Modelado)
-**Propósito:** Crear planes detallados y accionables.
-- Selecciona el mejor enfoque.
-- Diseña la arquitectura y componentes.
-- Planifica la estrategia de pruebas.
+### 3. Implementar con `build`
 
-### Fase 3: Act (Acción)
-**Propósito:** Ejecutar el plan con precisión.
-- Implementa el código siguiendo el plan.
-- Sigue las mejores prácticas y patrones.
-- Valida la implementación continuamente.
+Cuando el plan esté aprobado, cambia de agente con `default_agent` o con `opencode run --agent build`. Implementa una fase cada vez:
 
-### Fase 4: Deliver (Entrega)
-**Propósito:** Completar y desplegar la solución.
-- Pruebas finales y validación.
-- Optimización de rendimiento.
-- Finalización de la documentación.
+```text
+Implementa solo la primera tarea del plan. Detente al terminar para que pueda revisarla.
+```
 
----
+### 4. Revisar
 
-## 📊 Optimización del Flujo de Trabajo
+Pide la revisión a un subagente o a un comando personalizado, con permisos de solo lectura:
 
-Para maximizar tu eficiencia con OpenCode:
+```text
+Usa el subagente explore para comprobar que los cambios no rompen las llamadas a validateSession.
+```
 
-1.  **Identifica Cuellos de Botella**: ¿Qué pasos toman más tiempo?
-2.  **Automatiza**: Usa **Skills** para tareas repetitivas (ej: `/pr`, `/docs`).
-3.  **Estandariza**: Crea plantillas para flujos comunes en tu equipo.
-4.  **Mide el Impacto**: Revisa estadísticas de uso y calidad de los resultados.
+### 5. Confirmar
 
----
+Los cambios se confirman con Git como cualquier otro código. Antes de hacer commit, revisa el diff con tus herramientas habituales.
 
-## 📚 Siguientes Pasos
+## Deshacer cambios
 
-- [Referencia de Comandos](/avanzado/comandos/) - Lista completa de comandos.
-- [Guía de Agentes](/guias/agentes/) - Personalidades de IA.
-- [Guía de MCP](/avanzado/mcp/) - Extiende OpenCode.
+- `ctrl+x u` (`/undo`) deshace el último cambio del agente, y `ctrl+x r` (`/redo`) lo rehace.
+- Requiere que el proyecto sea un repositorio Git. Sin Git, usa tu control de versiones normal.
+
+## Buenas prácticas
+
+- Limita los permisos de `edit` y `shell` en los agentes que no necesitan escribir.
+- Usa `/compact` cuando la conversación sea larga, en lugar de empezar una sesión con todo el historial.
+- Crea una sesión nueva (`/new`) para cada tarea independiente.
+- Guarda las convenciones del proyecto en `AGENTS.md` para no repetirlas en cada sesión.

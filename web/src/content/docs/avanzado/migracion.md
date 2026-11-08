@@ -1,269 +1,88 @@
 ---
-title: Guía de Migración
-description: Coming from Cursor, Claude Code, or GitHub Copilot?
+title: Migrar de V1 a V2
+description: Pasos y equivalencias para pasar de opencode-ai 1.x a @opencode/cli
 ---
 
-# Guía de Migración desde Otras Herramientas
+OpenCode V2 se distribuye como `@opencode/cli`. La versión 1 se distribuye como `opencode-ai`. Los dos paquetes **no son intercambiables**, y la configuración de V1 no funciona tal cual en V2.
 
-¿Vienes de Cursor, Claude Code, GitHub Copilot u otra herramienta de coding AI? Esta guía te ayudará atransition a OpenCode.
+## 1. Instalar V2
 
----
+| Método V1 | Equivalente V2 |
+|-----------|----------------|
+| `npm install -g opencode-ai` | `npm install -g @opencode/cli` |
+| `curl -fsSL https://opencode.ai/install \| bash` | `curl -fsSL https://opencode.ai/v2/install \| bash` |
+| `brew install anomalyco/tap/opencode` | `brew install anomalyco/tap/opencode-v2` |
+| `bun install -g opencode-ai` | `bun install -g --trust @opencode/cli` |
 
-## 📊 Comparativa Rápida
+En Windows, V2 no admite gestores de paquetes. Usa el binario o el instalador de escritorio, o WSL.
 
-| Característica | OpenCode | Cursor | Claude Code | GitHub Copilot |
-|----------------|----------|--------|-------------|----------------|
-| **Interfaz** | Terminal (TUI) | Editor (IDE) | Web + CLI | Extensión IDE |
-| **Precio** | Solo modelos | $20+/mes | $20+/mes | $10-100/mes |
-| **Modelos** | Multi-proveedor | Mayormente Anthropic | Mayormente Anthropic | Mayormente OpenAI |
-| **Código** | 100% open source | Propietario | Propietario | Propietario |
-| **Extensible** | Skills + Agentes + MCP | Extensiones | Plugins | Copilot Chat |
+Desinstala V1 con el mismo gestor que usaste para instalarla, para evitar dos binarios `opencode` en el `PATH`.
 
----
+## 2. Convertir la configuración
 
-## 🖱️ De Cursor a OpenCode
+Pasa tu `opencode.json` de V1 a V2 con esta correspondencia:
 
-### Transiciones de Conceptos
+| V1 | V2 | Notas |
+|----|----|-------|
+| `permission` (objeto `{ "herramienta": "allow" }`) | `permissions` (lista de reglas) | Cada regla tiene `action`, `resource` y `effect` |
+| `mcp.<nombre>` con `enabled` | `mcp.servers.<nombre>` con `disabled` | `disabled` invierte la lógica de `enabled` |
+| `agent` | `agents` | Clave de nivel superior |
+| `command` | `commands` | Usa `template` en lugar de un texto suelto |
+| `provider` | `providers` | |
+| `subtask` en comandos | `subagent` | `subtask` queda como alias obsoleto |
 
-| Cursor | OpenCode |
-|--------|----------|
-| Cmd+K | `@` + prompt |
-| Cmd+L (Chat) | `opencode .` + chat |
-| Cmd+Idx (Index) | `/init` |
-| Settings | `/config` |
-| Extensiones | Skills + MCP |
+Dentro de los ficheros de agentes:
 
-### Flujo de Trabajo Equivalente
+| Campo de V1 | Qué hacer en V2 |
+|-------------|-----------------|
+| `tools` | Sustituir por `permissions` |
+| `temperature` | Eliminar |
+| `prompt` | Mover el texto al cuerpo del fichero `.md` o al campo `system` |
+| `maxSteps` | Sustituir por `steps` |
 
-**Cursor:**
-```bash
-# En el editor
-Cmd+K "Create a button component"
+Un ejemplo de MCP en V2:
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "docs": {
+        "type": "remote",
+        "url": "https://ejemplo.com/mcp",
+        "disabled": false
+      }
+    }
+  }
+}
 ```
 
-**OpenCode:**
-```bash
-# En la terminal
-[Build] Crea un componente Button
+Las claves `permission`, `agent`, `command` y `provider` siguen siendo aceptadas por compatibilidad, pero están obsoletas.
 
-# O simplemente
-Crea un componente Button en @src/components/
-```
-
-### Atajos de Teclado
-
-| Acción | Cursor | OpenCode |
-|--------|--------|----------|
-| Chat general | Cmd+L | `opencode .` |
-| Command menu | Cmd+Shift+P | `/` |
-| Accept | Tab | Escribir + Enter |
-| Modelo | Settings → Model | `/models` |
-
----
-
-## 🌐 De Claude Code a OpenCode
-
-### Transiciones de Conceptos
-
-| Claude Code | OpenCode |
-|-------------|----------|
-| Web UI | TUI (terminal) |
-| Project know | `/init` + AGENTS.md |
-| MCP servers | `/mcp install` |
-| Preferences | `/config` |
-
-### Flujo de Trabajo Equivalente
-
-**Claude Code:**
-```bash
-# En la web UI
-"Create a React app with authentication"
-```
-
-**OpenCode:**
-```bash
-# En terminal
-[Build] Crea una app React con autenticación usando Firebase
-```
-
-### Diferencias Clave
-
-| Aspecto | Claude Code | OpenCode |
-|---------|-------------|----------|
-| **Interfaz** | Browser | Terminal |
-| **Archivo contexto** | Auto | `@filename` |
-| **Herramientas** | Built-in | MCP Servers |
-| **Modos** | Solo uno | Plan / Build |
-
----
-
-## 🤖 De GitHub Copilot a OpenCode
-
-### Transiciones de Conceptos
-
-| GitHub Copilot | OpenCode |
-|----------------|-----------|
-| Inline completion | N/A |
-| Copilot Chat | Chat en terminal |
-| Copilot Extensions | Skills + MCP |
-| .github/copilot-indent | AGENTS.md |
-
-### Flujo de Trabajo Equivalente
-
-**Copilot:**
-```bash
-# En VS Code
-// Escribe comentario
-// Presiona Tab para completar
-```
-
-**OpenCode:**
-```bash
-# En terminal
-[Build] Implementa la función que describí en @spec.md
-```
-
-### Autocompletado vs Chat
-
-Copilot ofrece completado inline que OpenCode no tiene nativamente. Para workflows similares:
+## 3. Validar
 
 ```bash
-# OpenCode usa chat para código más complejo
-[Build] Crea una función que valide emails y retorne boolean
+opencode debug config
 ```
 
-### Extensiones
+Este comando muestra las fuentes de configuración que se cargan. Si una clave no se reconoce, aparecerá ahí antes de que falle una sesión.
 
-| Copilot | OpenCode |
-|---------|----------|
-|Extensions | Skills |
-| Custom instructions | AGENTS.md |
-| Context variables | `@file` |
+## 4. Comprobar las sesiones y los comandos
 
----
+- Lista las sesiones con `opencode session list`.
+- Exporta una sesión importante antes de desinstalar V1 con `opencode session export`.
+- Mueve tus comandos personalizados de `.opencode/commands/` a la nueva estructura si usas la forma JSON.
 
-## 🎯 Guía de Transición Paso a Paso
+## Qué no migra automáticamente
 
-### Semana 1: Adaptación
+- La configuración global de V1 no se lee desde V2. Copia y convierte el fichero manualmente.
+- Las reglas de permisos hay que reescribirlas como lista ordenada. Recuerda que gana la última regla que coincide.
 
-1. **Instalar OpenCode** en tu máquina
-2. **Configurar Zen** (`/connect`) - recomendado para principiantes
-3. **Practicar la TUI** - aprender atajos básicos
-4. **Probar proyectos simples** - pequeños cambios y refactors
+## Lista de comprobación
 
-### Semana 2: Workflow
-
-1. **Usar `/init`** en tus proyectos
-2. **Crear AGENTS.md** con contexto de proyecto
-3. **Explorar `/models`** para entender opciones
-4. **Practicar modo Plan y Build**
-
-### Semana 3: Extensión
-
-1. **Instalar skills** relevantes (`/skills install`)
-2. **Probar MCP servers** (`/mcp install`)
-3. **Crear agentes personalizados** si es necesario
-
-### Semana 4: Optimización
-
-1. **Personalizar configuración** (`/config`)
-2. **Crear workflows** automatizados
-3. **Integrar con tu stack** (Docker, GitHub Actions, etc.)
-
----
-
-## 🔧 Configuración de Migración
-
-### Importar Configuración
-
-```bash
-# Si tienes configuración previa
-opencode import --from cursor ~/.cursor/
-opencode import --from claude ~/.claude/
-```
-
-### AGENTS.md desde otras herramientas
-
-```markdown
-# AGENTS.md - Tu contexto de proyecto
-
-## Entorno
-- Node.js 20+
-- TypeScript
-- React + Vite
-
-## Comandos del proyecto
-- `npm run dev` - Desarrollo
-- `npm test` - Tests
-- `npm run build` - Build
-
-## Convenciones
-- Componentes en @src/components/
-- Tests en @src/__tests__/
-- Estilos con CSS modules
-```
-
----
-
-## 🚀 Ventajas de OpenCode
-
-### Para Desarrolladores
-
-- **Sin suscripción** - Solo paga modelos que usas
-- **Multi-proveedor** - Cambia entre OpenAI, Anthropic, Google...
-- **Terminal-first** - No sales de tu entorno de trabajo
-- **Totalmente extensible** - Skills, agents, MCP servers
-
-### Para Equipos
-
-- **Configuración centralizada** - Comparte configs
-- **Trabajo en equipo** - Workspaces compartidos
-- **SSO** - Autenticación empresarial
-- **Self-hosted** - Ejecuta localmente o en tu infrastructure
-
----
-
-## ⚠️ Cosas a Considerar
-
-### Curva de Aprendizaje
-
-| Nivel | OpenCode | Cursor | Copilot |
-|-------|----------|--------|----------|
-| Inicio rápido | Medio | Bajo | Bajo |
-| Dominio | Alto | Medio | Bajo |
-| Personalización | Alto | Medio | Bajo |
-
-### Funcionalidades que Cambian
-
-- **No hay autocompletado inline** - Todo es chat
-- **Interfaz de terminal** - Requiere comodidad con CLI
-- **Menos "magia"** - Más explícito y controlable
-
----
-
-## 📚 Recursos de Ayuda
-
-- [Guía de Inicio Rápido](/guias/inicio-rapido/)
-- [Guía de TUI](/guias/tui/)
-- [Guía de Zen](/guias/zen/)
-- [Referencia de Comandos](/avanzado/comandos/)
-- [Servidores MCP](/avanzado/mcp/)
-
----
-
-## ❓ FAQ de Migración
-
-### ¿Puedo usar mis claves API existentes?
-Sí, OpenCode acepta claves de OpenAI, Anthropic, Google, DeepSeek y otros proveedores.
-
-### ¿Pierdo mi historial de conversaciones?
-Las sesiones se guardan localmente. Puedes exportarlas con `/export`.
-
-### ¿Funciona con VS Code?
-OpenCode funciona independientemente. Puedes usar el output en cualquier editor.
-
-### ¿Es más difícil que Cursor?
-Tiene una curva de aprendizaje diferente. Pero una vez que dominas la terminal, es más poderoso y flexible.
-
-### ¿Puedo usar los dos a la vez?
-Sí, muchos desarrolladores usan Copilot para inline completions y OpenCode para tareas más complejas.
+- [ ] V2 instalado y `opencode --version` responde.
+- [ ] V1 desinstalado o fuera del `PATH`.
+- [ ] `opencode.json` convertido y sin claves obsoletas.
+- [ ] `opencode debug config` muestra las fuentes esperadas.
+- [ ] Servidores MCP arrancan (`opencode mcp list`).
+- [ ] Una sesión de prueba completa sin errores de permisos.

@@ -1,0 +1,27 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro';
+---
+
+<Default />
+<p class="site-credit">
+	Diseño y desarrollo web: <a href="https://webdespega.com/" target="_blank" rel="noopener">webdespega.com</a>
+</p>
+
+<style>
+	.site-credit {
+		margin: 0;
+		padding: 0 var(--sl-nav-pad-x, 1rem) 1rem;
+		font-size: var(--sl-text-xs);
+		color: var(--sl-color-gray-3);
+		overflow-wrap: anywhere;
+	}
+	.site-credit a {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+	.site-credit a:hover,
+	.site-credit a:focus-visible {
+		color: var(--sl-color-accent-high);
+	}
+</style>
